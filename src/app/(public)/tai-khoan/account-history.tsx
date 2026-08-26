@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { PublicLangProvider, usePublicLang } from "@/lib/public-i18n";
 
 export interface AccountHistoryEntry {
@@ -15,6 +16,9 @@ function AccountHistoryInner({ entries }: { entries: AccountHistoryEntry[] }) {
 
   return (
     <div className="mx-auto max-w-2xl p-6">
+      <Link href="/" className="mb-4 inline-block text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
+        {t("backHome")}
+      </Link>
       <h1 className="mb-6 text-2xl font-extrabold tracking-tight">{t("accountPageTitle")}</h1>
       {entries.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("accountEmpty")}</p>

@@ -70,4 +70,14 @@ describe("AccountPage", () => {
     expect(screen.getByText("Khung cam chuẩn")).toBeTruthy();
     expect(screen.getByText("FPT tròn 38 tuổi")).toBeTruthy();
   });
+
+  it("shows a back-to-home link pointing at /", async () => {
+    (getCurrentUser as any).mockResolvedValue({ id: "u1", role: "user" });
+    (prisma.generatedAvatar.findMany as any).mockResolvedValue([]);
+
+    render(await AccountPage());
+
+    const back = screen.getByRole("link", { name: "← Trang chủ" });
+    expect(back.getAttribute("href")).toBe("/");
+  });
 });
