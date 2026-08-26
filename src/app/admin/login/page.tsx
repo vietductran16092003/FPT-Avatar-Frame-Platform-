@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { signInAsMockAdmin } from "@/lib/mock-fpt-auth";
+import { signInAsMockAdmin, signInAsMockUser } from "@/lib/mock-fpt-auth";
 
 function MicrosoftLogo() {
   return (
@@ -27,6 +27,7 @@ export default function AdminLoginPage() {
 function AdminLoginPageInner() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/admin/campaigns";
+  const signIn = callbackUrl.startsWith("/admin") ? signInAsMockAdmin : signInAsMockUser;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
@@ -48,7 +49,7 @@ function AdminLoginPageInner() {
         </p>
         <button
           type="button"
-          onClick={() => signInAsMockAdmin(callbackUrl)}
+          onClick={() => signIn(callbackUrl)}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-5 py-3.5 text-[15px] font-bold text-background transition-opacity hover:opacity-90"
         >
           <MicrosoftLogo />
