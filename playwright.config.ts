@@ -7,6 +7,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e',
+  testIgnore: ['**/example.spec.ts'],
   fullyParallel: false, // tests share one Postgres DB; keep sequential to avoid cross-test noise in list/analytics assertions
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
