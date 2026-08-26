@@ -56,7 +56,7 @@ Mở [http://localhost:3000](http://localhost:3000).
 
 Đăng nhập sản xuất dùng **Azure AD SSO** (NextAuth `AzureADProvider`), giới hạn tài khoản nhân viên FPT. Cần 3 biến `AZURE_AD_CLIENT_ID`, `AZURE_AD_CLIENT_SECRET`, `AZURE_AD_TENANT_ID` lấy từ App Registration trên Azure Portal.
 
-**Chưa có Azure AD thật?** Xem hướng dẫn xin đăng ký ứng dụng tại [`docs/azure-ad-app-registration-request.md`](docs/azure-ad-app-registration-request.md) — checklist gửi cho team quản trị Azure AD/IT (redirect URI, quyền Graph API cần thiết, cách tạo client secret).
+**Trạng thái hiện tại: chưa có Azure AD thật** — cả 3 biến `AZURE_AD_CLIENT_ID`, `AZURE_AD_CLIENT_SECRET`, `AZURE_AD_TENANT_ID` đang để trống trong `.env`. Xem hướng dẫn xin đăng ký ứng dụng tại [`docs/azure-ad-app-registration-request.md`](docs/azure-ad-app-registration-request.md) — checklist gửi cho team quản trị Azure AD/IT (redirect URI, quyền Graph API cần thiết, cách tạo client secret).
 
 **Phát triển/test cục bộ không cần Azure AD thật**: bật `NEXT_PUBLIC_DEV_LOGIN_ENABLED=true` trong `.env` — nút "Đăng nhập với tài khoản FPT" sẽ đăng nhập bằng 2 tài khoản giả cố định:
 - `user@fpt.com.vn` (đăng nhập từ trang chủ) → role `user`
@@ -71,7 +71,7 @@ Tích hợp GA4 gồm 2 phần độc lập, cả hai đều **tuỳ chọn** (k
 - **Gửi sự kiện** (`campaign_view`, `template_select`, `avatar_download`) lên GA — cần `NEXT_PUBLIC_GA_MEASUREMENT_ID`.
 - **Dashboard admin đọc số liệu từ GA** (biểu đồ "downloads by unit") qua GA4 Data API — cần `GA4_PROPERTY_ID` + `GOOGLE_APPLICATION_CREDENTIALS` (service account JSON, quyền Viewer) + custom dimension `unit` tạo sẵn trong GA4.
 
-Hướng dẫn từng bước (tạo property, lấy Measurement ID/Property ID, tạo service account, tạo custom dimension): [`docs/google-analytics-setup.md`](docs/google-analytics-setup.md).
+**Trạng thái hiện tại: chưa cấu hình** — cả 3 biến `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `GA4_PROPERTY_ID`, `GOOGLE_APPLICATION_CREDENTIALS` chưa có trong `.env` (chưa có GA4 property nào cho dự án). Hướng dẫn từng bước để xin/tạo (property, Measurement ID/Property ID, service account, custom dimension): [`docs/google-analytics-setup.md`](docs/google-analytics-setup.md).
 
 ## Lưu trữ ảnh
 

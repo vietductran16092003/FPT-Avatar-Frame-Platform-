@@ -7,6 +7,22 @@ Có 2 phần độc lập — bạn có thể làm phần 1 trước, phần 2 s
 - **Phần A — Gửi dữ liệu lên GA** (event tracking): cần Measurement ID.
 - **Phần B — Dashboard admin đọc số liệu từ GA**: cần Property ID + service account + custom dimension.
 
+## Trạng thái hiện tại — còn thiếu để xin
+
+**Cả 3 biến dưới đây hiện chưa có trong `.env`** — chưa có GA4 property nào được tạo cho dự án này:
+
+| Biến `.env` | Trạng thái | Cần cho |
+|---|---|---|
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | ❌ Chưa có | Phần A — bật gửi sự kiện lên GA |
+| `GA4_PROPERTY_ID` | ❌ Chưa có | Phần B — dashboard admin đọc số liệu |
+| `GOOGLE_APPLICATION_CREDENTIALS` | ❌ Chưa có | Phần B — xác thực GA4 Data API |
+
+**Việc cần xin:**
+1. Ai đó có quyền tạo GA4 property cho FPT (marketing/IT nội bộ, hoặc tự tạo nếu bạn có quyền truy cập Google Analytics của tổ chức) → làm theo **Phần A** để lấy Measurement ID.
+2. Nếu muốn dashboard admin đọc số liệu thật → cần thêm quyền tạo **service account** trên Google Cloud (mục B2) — nếu chưa có project Google Cloud nội bộ cho FPT, cần xin IT tạo hoặc cấp quyền truy cập vào project sẵn có.
+
+Không có 3 giá trị này thì app vẫn chạy bình thường — chỉ không gửi/đọc được số liệu GA (theo thiết kế, xem `src/components/google-analytics.tsx` và `src/lib/server/analytics/ga4-report.ts`).
+
 ---
 
 ## Phần A — Bật event tracking (bắt buộc, làm trước)
