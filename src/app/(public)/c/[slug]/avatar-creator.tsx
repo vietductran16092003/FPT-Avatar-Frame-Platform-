@@ -76,13 +76,17 @@ function PillSelect({
         value={value}
         onChange={e => onChange(e.target.value)}
         className={cn(
-          "w-full appearance-none rounded-full border-2 px-5 py-3 text-center text-sm font-extrabold uppercase tracking-wide outline-none transition-colors",
+          // Force dropdown options to dark-on-white regardless of the pill's
+          // own text color — when filled the select is text-white, and the
+          // native <option> popup inherits that, rendering white-on-white and
+          // unreadable. The [&>option] utilities pin readable option colors.
+          "w-full appearance-none rounded-full border-2 px-5 py-3 text-center text-sm font-extrabold uppercase tracking-wide outline-none transition-colors [&>option]:bg-white [&>option]:font-semibold [&>option]:text-slate-900",
           filled
             ? "border-transparent bg-gradient-to-b from-[#FF5A01] to-[#FDAE15] text-white"
             : "border-[#FF5A01] bg-white text-[#FF5A01]",
         )}
       >
-        <option value="" disabled>{placeholder}</option>
+        <option value="" disabled className="text-slate-400">{placeholder}</option>
         {options.map(opt => (
           <option key={opt} value={opt}>{opt}</option>
         ))}
