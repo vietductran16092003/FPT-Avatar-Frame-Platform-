@@ -60,10 +60,11 @@ export async function seedDatabase(client: PrismaClient, storage: ImageStorage =
                 fontWeight: "bold",
                 rotation: -44,
                 curve: {
-                  centerX: 50, // % width — center of the photo circle
-                  centerY: 48, // % height
-                  radius: 44,  // % width — just outside the circle's rim
-                  angle: -135, // deg (0=right, -90=up) — midpoint of the text, ~10:30
+                  centerX: 48, // % width
+                  centerY: 58, // % height — center pulled low so the arc is
+                  radius: 55,  // % width — gentle (large radius), matching the
+                               // ribbon's shallow diagonal in the Frame 29 mockup
+                  angle: -122, // deg (0=right, -90=up) — midpoint of the text
                   direction: "cw",
                 },
               },
