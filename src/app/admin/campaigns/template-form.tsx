@@ -47,6 +47,9 @@ function presetOverlay(preset: ComponentPreset): TextOverlay {
     y: 50,
     fontSize: 20,
     color: "#ffffff",
+    // A preset's styled overlay template (font/curve/stroke/shadow, and an
+    // overridden `type`) wins over the plain defaults above.
+    ...preset.overlay,
   };
 }
 
@@ -62,7 +65,11 @@ function overlaysMatch(a: TextOverlay, b: TextOverlay): boolean {
     a.color === b.color &&
     a.placeholder === b.placeholder &&
     JSON.stringify(a.options ?? []) === JSON.stringify(b.options ?? []) &&
-    JSON.stringify(a.curve ?? null) === JSON.stringify(b.curve ?? null)
+    JSON.stringify(a.curve ?? null) === JSON.stringify(b.curve ?? null) &&
+    a.fontWeight === b.fontWeight &&
+    a.strokeColor === b.strokeColor &&
+    a.strokeWidth === b.strokeWidth &&
+    JSON.stringify(a.shadow ?? null) === JSON.stringify(b.shadow ?? null)
   );
 }
 

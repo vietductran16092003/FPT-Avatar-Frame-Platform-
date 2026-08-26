@@ -141,7 +141,7 @@ describe("TemplateForm", () => {
     }));
   });
 
-  it("adds a select overlay with year options when the join-year preset is ticked", async () => {
+  it("adds a fully-styled curved yearsSince overlay with year options when the join-year preset is ticked", async () => {
     const onSubmit = vi.fn();
     renderTemplateForm({ onSubmit });
 
@@ -156,7 +156,16 @@ describe("TemplateForm", () => {
     expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({
       overlayConfig: expect.objectContaining({
         textOverlays: expect.arrayContaining([
-          expect.objectContaining({ key: "joinYear", type: "select", options: expect.arrayContaining([currentYear, "1988"]) }),
+          expect.objectContaining({
+            key: "joinYear",
+            type: "yearsSince",
+            options: expect.arrayContaining([currentYear, "1988"]),
+            fontSize: 46,
+            fontWeight: "bold",
+            strokeColor: "#FF5A01",
+            shadow: expect.objectContaining({ offsetY: 7 }),
+            curve: expect.objectContaining({ centerX: 48, radius: 55, angle: -122, direction: "cw" }),
+          }),
         ]),
       }),
     }));
