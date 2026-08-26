@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, type RefObject } from "react";
-import { Canvas, FabricImage, FabricText, Rect } from "fabric";
+import { Canvas, FabricImage, FabricText, Rect, Shadow } from "fabric";
 import { resolvePhotoPlacement, clampTransform, IDENTITY_TRANSFORM, type PhotoTransform } from "@/lib/compositing/photo-placement";
 import type { ResolvedDraw } from "@/lib/compositing/overlay-layout";
 
@@ -267,6 +267,14 @@ export function useAvatarCanvas(canvasElRef: RefObject<HTMLCanvasElement | null>
         fill: d.color,
         fontFamily: "sans-serif",
         fontWeight: d.fontWeight ?? "normal",
+        // Outline behind the fill (Figma "outer" stroke look) + drop shadow,
+        // mirroring the server compositor so preview matches the download.
+        stroke: d.strokeColor,
+        strokeWidth: d.strokeWidth ?? 0,
+        paintFirst: "stroke",
+        shadow: d.shadow
+          ? new Shadow({ color: d.shadow.color, offsetX: d.shadow.offsetX, offsetY: d.shadow.offsetY, blur: d.shadow.blur })
+          : undefined,
         selectable: false,
         evented: false,
       });

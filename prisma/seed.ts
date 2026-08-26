@@ -58,6 +58,12 @@ export async function seedDatabase(client: PrismaClient, storage: ImageStorage =
                 fontSize: 46,
                 color: "#ffffff",
                 fontWeight: "bold",
+                // Figma spec (1.5px #FF5A01 outer stroke + 0/4/4 black-25%
+                // shadow, measured on the ~464px design) scaled ~1.72x to
+                // this 800px frame render.
+                strokeColor: "#FF5A01",
+                strokeWidth: 2.6,
+                shadow: { offsetX: 0, offsetY: 7, blur: 7, color: "rgba(0,0,0,0.25)" },
                 rotation: -44,
                 curve: {
                   centerX: 48, // % width

@@ -58,6 +58,27 @@ export async function compositeAvatar(
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
     }
+    // Drop shadow (if any) applies to whatever is painted next. When there's
+    // also an outline, let the shadow cast from the outline, then clear it so
+    // the fill on top doesn't double up the shadow.
+    if (draw.shadow) {
+      ctx.shadowColor = draw.shadow.color;
+      ctx.shadowOffsetX = draw.shadow.offsetX;
+      ctx.shadowOffsetY = draw.shadow.offsetY;
+      ctx.shadowBlur = draw.shadow.blur;
+    }
+    // Outer-style outline: stroke behind, fill on top so the fill covers the
+    // inner half of the stroke, leaving the outline showing outside the glyph.
+    if (draw.strokeColor && draw.strokeWidth) {
+      ctx.lineWidth = draw.strokeWidth;
+      ctx.strokeStyle = draw.strokeColor;
+      ctx.lineJoin = "round";
+      ctx.strokeText(draw.text, 0, 0);
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+    }
     // node-canvas's fillText draws literal characters, not markup — no
     // separate XML escaping step is needed here (unlike an SVG-string
     // compositor), but values still pass through resolveOverlayDraws
