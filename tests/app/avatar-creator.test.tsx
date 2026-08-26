@@ -67,7 +67,7 @@ describe("AvatarCreator", () => {
   it("hides the frame-choice grid when the campaign has only one template", () => {
     renderCreator();
     expect(screen.queryByText("Khung cam")).toBeNull();
-    expect(screen.queryByText("2. Chọn khung")).toBeNull();
+    expect(screen.queryByText("Chọn khung")).toBeNull();
   });
 
   it("shows the frame-choice grid when the campaign has more than one template", () => {
@@ -80,7 +80,7 @@ describe("AvatarCreator", () => {
     renderCreator([...templates, second]);
     expect(screen.getByText("Khung cam")).toBeTruthy();
     expect(screen.getByText("Khung xanh")).toBeTruthy();
-    expect(screen.getByText("2. Chọn khung")).toBeTruthy();
+    expect(screen.getByText("Chọn khung")).toBeTruthy();
   });
 
   it("renders a text input for a text overlay and a select for a select overlay, using the template's first frame by default", () => {
