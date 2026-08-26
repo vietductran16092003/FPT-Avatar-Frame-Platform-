@@ -337,7 +337,7 @@ function AvatarCreatorInner({
             shown only until a photo is staged. */}
         <div
           className={cn(
-            "relative mx-auto aspect-square w-full overflow-hidden rounded-full transition-colors",
+            "relative mx-auto aspect-square w-full overflow-hidden rounded-2xl transition-colors",
             !photoFile && isDraggingPhoto && "ring-4 ring-primary/40",
           )}
           style={{ boxShadow: "inset 0 0 0 1px rgba(16,30,46,.16)" }}
