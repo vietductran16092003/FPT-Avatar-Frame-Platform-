@@ -89,32 +89,117 @@ Tích hợp GA4 gồm 2 phần độc lập, cả hai đều **tuỳ chọn** (k
   npx playwright test    # bao gồm CRUD admin, luồng public, phân quyền, FK-restrict, chữ cong...
   ```
 
-## Cấu trúc thư mục (rút gọn)
+## Cấu trúc thư mục (đầy đủ)
 
 ```
-src/
-├── app/
-│   ├── (public)/            # Trang chủ, trang chiến dịch /c/[slug], /tai-khoan
-│   ├── admin/                # Trang quản trị (campaigns, analytics, login)
-│   └── api/                  # Route Handlers (campaigns, admin, auth, generate...)
-├── lib/
-│   ├── compositing/           # Logic ghép ảnh + overlay chữ dùng chung (client & server)
-│   ├── server/
-│   │   ├── compositing/       # Render ảnh cuối bằng node-canvas
-│   │   ├── storage/           # Abstraction lưu trữ ảnh (MinIO/S3)
-│   │   └── ...                 # Prisma client, session, auth-options, analytics
-│   ├── component-presets.ts   # Preset các trường overlay phổ biến cho admin
-│   └── mock-fpt-auth.ts       # Đăng nhập giả lập cho dev/test cục bộ
-├── components/                 # UI dùng chung (header, notification bell...)
-prisma/
-├── schema.prisma               # Model: User, Campaign, Template, GeneratedAvatar, Notification
-└── seed.ts                     # Dữ liệu mẫu (chiến dịch fpt38 + khung)
-e2e/                             # Playwright test suite (admin, public, edge case, tính năng mới)
-tests/                           # Vitest unit/component test
-docs/
-├── azure-ad-app-registration-request.md   # Checklist xin Azure AD App Registration
-├── google-analytics-setup.md              # Hướng dẫn nối GA4 từng bước
-└── superpowers/                            # Spec/plan thiết kế các tính năng (lịch sử phát triển)
+FPT-Avatar-Frame-Platform/
+├── .env / .env.example              # Biến môi trường (xem các mục Xác thực, GA4, Lưu trữ ảnh ở trên)
+├── docker-compose.dev.yml           # Postgres + MinIO cho local dev
+├── CLAUDE.md                        # Quy ước làm việc với Claude Code trong dự án
+├── README.md
+├── package.json / package-lock.json
+├── tsconfig.json / next.config.mjs / tailwind.config.ts / postcss.config.mjs / components.json
+├── vitest.config.ts / vitest.setup.ts   # Cấu hình Vitest (unit/component test)
+├── playwright.config.ts             # Cấu hình Playwright (e2e test)
+│
+├── prisma/
+│   ├── schema.prisma                 # Model: User, Campaign, Template, GeneratedAvatar, Notification
+│   ├── seed.ts                       # Dữ liệu mẫu (chiến dịch fpt38 + khung)
+│   ├── seed-assets/                  # Ảnh khung dùng khi seed (frame-fpt38-orange.png, frame-tw-blue.png)
+│   └── migrations/                   # Lịch sử migration (init, add_notification, add_generated_avatar_language)
+│
+├── public/                           # Ảnh tĩnh (logo, background trang chủ/campaign, badge header)
+│
+├── src/
+│   ├── middleware.ts                  # Chặn truy cập /admin/* khi chưa đăng nhập
+│   │
+│   ├── app/                            # Next.js App Router
+│   │   ├── layout.tsx, globals.css, favicon.ico
+│   │   ├── campaigns-client.ts         # Hàm gọi API campaigns dùng chung phía client
+│   │   ├── fonts/                      # Font Geist (tự host)
+│   │   │
+│   │   ├── (public)/                   # Nhóm route công khai (không tiền tố URL)
+│   │   │   ├── layout.tsx, page.tsx    # Layout public + trang chủ (danh sách chiến dịch)
+│   │   │   ├── campaign-cards.tsx      # Card hiển thị từng chiến dịch ở trang chủ
+│   │   │   ├── c/[slug]/                # Trang tạo avatar theo chiến dịch
+│   │   │   │   ├── page.tsx, layout.tsx
+│   │   │   │   ├── avatar-creator.tsx   # Form chọn khung + điền overlay + tải ảnh
+│   │   │   │   ├── use-avatar-canvas.ts # Hook điều khiển canvas xem trước (Fabric.js)
+│   │   │   │   ├── campaign-header.tsx, campaign-footer.tsx
+│   │   │   └── tai-khoan/               # Lịch sử tải ảnh của user đã đăng nhập
+│   │   │       ├── page.tsx, account-history.tsx
+│   │   │
+│   │   ├── admin/                      # Trang quản trị
+│   │   │   ├── layout.tsx               # AdminGate — chặn role khác admin
+│   │   │   ├── login/page.tsx           # Đăng nhập admin (Azure AD / dev-login)
+│   │   │   ├── analytics/page.tsx       # Dashboard thống kê lượt tải
+│   │   │   └── campaigns/               # CRUD chiến dịch + khung ảnh
+│   │   │       ├── page.tsx
+│   │   │       ├── campaign-form.tsx, template-form.tsx
+│   │   │       ├── photo-area-picker.tsx    # Kéo-thả chọn vùng ảnh cá nhân
+│   │   │       └── curve-text-picker.tsx    # Kéo-thả đặt đường cong cho chữ overlay
+│   │   │
+│   │   └── api/                        # Route Handlers (REST nội bộ)
+│   │       ├── auth/[...nextauth]/route.ts       # NextAuth (Azure AD + dev-login)
+│   │       ├── campaigns/                        # API public: danh sách + chi tiết chiến dịch
+│   │       │   ├── route.ts
+│   │       │   └── [slug]/route.ts, generate/route.ts   # generate = ghép ảnh + lưu GeneratedAvatar
+│   │       ├── notifications/route.ts            # Thông báo phía public
+│   │       └── admin/                            # API admin (đều yêu cầu role admin)
+│   │           ├── analytics/route.ts
+│   │           ├── campaigns/route.ts, [slug]/route.ts
+│   │           │   └── [slug]/templates/route.ts, [id]/route.ts
+│   │           └── notifications/route.ts, [id]/route.ts, mark-all-read/route.ts
+│   │
+│   ├── components/                     # UI dùng chung giữa các trang
+│   │   ├── ui/                          # Base UI (shadcn-style: button, input, label, select)
+│   │   ├── admin-header.tsx, admin-shell.tsx, notification-bell.tsx
+│   │   ├── public-header.tsx, public-notification-bell.tsx
+│   │   └── google-analytics.tsx         # Nhúng gtag.js (no-op nếu chưa cấu hình GA)
+│   │
+│   └── lib/
+│       ├── compositing/                  # Logic ghép ảnh + overlay DÙNG CHUNG client & server
+│       │   ├── overlay-layout.ts          # resolveOverlayDraws — bố cục chữ, kể cả chữ theo đường cong
+│       │   └── photo-placement.ts         # Toán vị trí/pan-zoom ảnh cá nhân trong khung
+│       ├── server/                        # Code chỉ chạy phía server
+│       │   ├── compositing/
+│       │   │   ├── server-compositor.ts       # Render ảnh PNG cuối cùng bằng node-canvas
+│       │   │   └── validate-overlay-values.ts # Kiểm tra dữ liệu overlay người dùng gửi lên
+│       │   ├── storage/                   # Abstraction lưu trữ ảnh
+│       │   │   ├── types.ts, index.ts, minio-storage.ts
+│       │   ├── analytics/ga4-report.ts    # Đọc số liệu GA4 Data API cho dashboard admin
+│       │   ├── auth-options.ts            # Cấu hình NextAuth (provider, callback gán role)
+│       │   ├── session.ts, require-admin.ts, base-url.ts
+│       │   ├── campaign-visibility.ts     # Điều kiện 1 chiến dịch có hiển thị công khai không
+│       │   ├── notifications.ts, prisma.ts
+│       ├── analytics/ga4-client.ts        # Gửi sự kiện lên GA4 (gtag), no-op nếu chưa cấu hình
+│       ├── admin-i18n.tsx, public-i18n.tsx    # i18n Việt/Anh cho từng khu vực
+│       ├── component-presets.ts           # Preset trường overlay phổ biến (đã style sẵn) cho admin
+│       ├── localized-content.ts           # Chọn nội dung VI/EN theo displayConfig
+│       ├── analytics-placeholder.ts       # Số liệu mẫu khi GA4 chưa cấu hình
+│       ├── mock-fpt-auth.ts               # Đăng nhập giả lập user/admin cho dev/test cục bộ
+│       └── utils.ts
+│
+├── tests/                              # Vitest unit/component test (đối chiếu 1-1 với src/)
+│   ├── app/, components/, lib/, prisma/
+│   └── middleware.test.ts, prisma-schema.test.ts
+│
+├── e2e/                                # Playwright end-to-end test (chạy trên server + DB thật)
+│   ├── admin-campaign.spec.ts          # CRUD chiến dịch/khung, phân quyền admin
+│   ├── public-avatar.spec.ts           # Luồng tạo avatar phía public
+│   ├── edge-cases.spec.ts              # FK Restrict khi xoá khung/chiến dịch còn tham chiếu
+│   ├── new-features.spec.ts            # Chữ theo đường cong, preset, đăng nhập user, khung vuông...
+│   ├── support/                        # Helper dùng chung (env, db, auth, factories)
+│   └── fixtures/                       # Ảnh mẫu dùng trong test
+│
+└── docs/
+    ├── azure-ad-app-registration-request.md   # Checklist xin Azure AD App Registration
+    ├── google-analytics-setup.md              # Hướng dẫn nối GA4 từng bước
+    ├── origins/                                # Tài liệu yêu cầu/kiến trúc gốc của dự án
+    └── superpowers/                            # Spec/plan thiết kế từng tính năng (lịch sử phát triển)
+        ├── specs/                               # Thiết kế chi tiết (design doc)
+        ├── plans/                               # Kế hoạch triển khai theo task
+        └── demo/                                # Prototype UX cũ (vanilla JS, chỉ để tham khảo)
 ```
 
 ## Tài liệu liên quan
