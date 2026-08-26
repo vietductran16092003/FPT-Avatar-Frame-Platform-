@@ -103,7 +103,13 @@ export default function AdminCampaignsPage() {
 
   async function handleDelete(slug: string) {
     if (!window.confirm(`Xóa campaign "${slug}"? Không thể hoàn tác.`)) return;
-    await fetch(`/api/admin/campaigns/${slug}`, { method: "DELETE" });
+    const res = await fetch(`/api/admin/campaigns/${slug}`, { method: "DELETE" });
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      setSubmitError(data?.error ?? "Không xóa được Campaign. Có thể vẫn còn khung/avatar liên quan.");
+      return;
+    }
+    setSubmitError(null);
     loadCampaigns();
   }
 
@@ -168,7 +174,13 @@ export default function AdminCampaignsPage() {
 
   async function handleTemplateDelete(id: string) {
     if (!window.confirm("Xóa khung này? Không thể hoàn tác.")) return;
-    await fetch(`/api/admin/campaigns/${editingSlug}/templates/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/admin/campaigns/${editingSlug}/templates/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      setTemplateError(data?.error ?? "Không xóa được khung. Có thể vẫn còn avatar đã tạo từ khung này.");
+      return;
+    }
+    setTemplateError(null);
     loadTemplates(editingSlug!);
   }
 
